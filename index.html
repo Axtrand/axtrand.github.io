@@ -4363,7 +4363,9 @@ async function callClaude({cfg, model, chat, signal, onContent, onReasoning}){
 
 /* -------- Google Gemini -------- */
 async function callGemini({cfg, model, chat, signal, onContent, onReasoning}){
-  const url = `${cfg.base.replace(/\/+$/,"")}/models/${encodeURIComponent(model)}:streamGenerateContent?alt=sse&key=${encodeURIComponent(cfg.key)}`;
+  const workerUrl = "https://09fcc339-axtrand-github-io.riyaz-uniqueconstruction.workers.dev/chat";
+  const url = `${workerUrl}?model=${encodeURIComponent(model)}`;
+
   const contents = [];
   const msgs = lastN(chat.messages, chat);
   const allowAttachG = computeAttachmentAllowSet(msgs);
