@@ -61,7 +61,39 @@ export default {
         origin
       );
     }
+// Gemini authentication test
+if (request.method === "GET" && url.pathname === "/test-auth") {
+  if (!env.GEMINI_API_KEY) {
+    return jsonResponse(
+      {
+        success: false,
+        message: "GEMINI_API_KEY secret is missing from Worker."
+      },
+      500,
+      origin
+    );
+  }
 
+  const response = await fetch(`${GEMINI_BASE}/models`, {
+    method: "GET",
+    headers: {
+      "x-goog-api-key": env.GEMINI_API_KEY
+    }
+  });
+
+  return jsonResponse(
+    {
+      success: response.ok,
+      googleStatus: response.status,
+      googleStatusText: response.statusText,
+      message: response.ok
+        ? "Gemini API authentication is working."
+        : "Worker has the secret, but Google rejected the request."
+    },
+    response.ok ? 200 : response.status,
+    origin
+  );
+}
     // Gemini model list
     if (request.method === "GET" && url.pathname === "/models") {
       const upstreamUrl = `${GEMINI_BASE}/models`;
